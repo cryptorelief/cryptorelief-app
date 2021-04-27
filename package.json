@@ -1,0 +1,19 @@
+{
+  "name": "cryptorelief",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "needle": "^2.6.0",
+    "twitter": "^1.7.1",
+    "twitter-v2": "^1.1.0"
+  }
+}
