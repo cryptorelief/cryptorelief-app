@@ -23,6 +23,8 @@ const extractDetails = async (content) => {
       }
     );
 
+    console.log(response);
+
     if (response.data.variations.length) {
       if (validDetails(response.data.variations[0])) {
         return response.data.variations[0];

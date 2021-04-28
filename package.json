@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "twitter": "node twitter.js",
+    "supabase": "node process-supabase.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
