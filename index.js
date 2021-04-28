@@ -10,8 +10,7 @@ const { extractDetails } = require("./utils/spell");
 const token = process.env.BEARER_TOKEN;
 
 const rulesURL = "https://api.twitter.com/2/tweets/search/stream/rules";
-const streamURL =
-  "https://api.twitter.com/2/tweets/search/stream?user.fields=created_at,location&expansions=author_id&tweet.fields=geo";
+const streamURL = 'https://api.twitter.com/2/tweets/search/stream?user.fields=location&expansions=author_id,geo.place_id&tweet.fields=created_at,geo,lang&place.fields=country';
 
 // this sets up two rules - the value is the search terms to match on, and the tag is an identifier that
 // will be applied to the Tweets return to show which rule they matched
@@ -21,24 +20,28 @@ const streamURL =
 // Edit rules as desired below
 const rules = [
   {
-    value: "need remdesivir -is:retweet",
-    tag: "remdesivir",
+    value: "(help OR need OR required OR available) (remdesivir OR tocilizumab) -is:retweet",
+    tag: "injection",
   },
   {
-    value: "need oxygen -is:retweet",
+    value: "(help OR need OR required OR available) oxygen -is:retweet",
     tag: "oxygen",
   },
   {
-    value: "donor plasma -is:retweet",
+    value: "(help OR need OR required OR available OR donor) plasma -is:retweet",
     tag: "plasma",
   },
   {
-    value: "need bed -is:retweet",
+    value: "(help OR need OR required OR available) bed -is:retweet",
     tag: "bed",
   },
   {
-    value: "need ventilator -is:retweet",
-    tag: "ventilator",
+    value: "(help OR need OR required OR available) (ventilator OR icu OR ccu OR hdu) -is:retweet",
+    tag: "icu/ventilator",
+  },
+  {
+    value: "(test OR rtpcr OR antigen) -is:retweet",
+    tag: "test",
   },
   // {
   //   value: "covid help -is:retweet",
