@@ -44,10 +44,10 @@ const rules = [
       "(help OR need OR required OR available) (ventilator OR icu OR ccu OR hdu) -is:retweet",
     tag: "icu/ventilator",
   },
-  {
-    value: "(test OR rtpcr OR antigen) -is:retweet",
-    tag: "test",
-  },
+  // {
+  //   value: "(test OR rtpcr OR antigen) -is:retweet",
+  //   tag: "test",
+  // },
   // {
   //   value: "covid help -is:retweet",
   //   tag: "covid",
@@ -130,9 +130,11 @@ function streamConnect(retryAttempt) {
             try {
               const { data, error } = await supabase.from("Demands").insert([
                 {
-                  source: "twitter",
+                  source: "Twitter",
+                  status: "raw",
                   source_id: json.data.id,
                   content: tweet,
+                  datetime: json.data.created_at,
                   location:
                     (json.includes &&
                       json.includes.places &&

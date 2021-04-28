@@ -1,7 +1,17 @@
 const axios = require("axios");
 
 const validDetails = (data) => {
-  return !(((data.name === data.contact_number) === data.location) === "–");
+  // console.log(
+  //   data.name.length === 1,
+  //   data.contact_number.length === 1,
+  //   data.location.length === 1
+  // );
+
+  return !(
+    data.name.length === 1 &&
+    data.contact_number.length === 1 &&
+    data.location.length === 1
+  );
 };
 
 const extractDetails = async (content) => {
@@ -22,8 +32,6 @@ const extractDetails = async (content) => {
         },
       }
     );
-
-    console.log(response);
 
     if (response.data.variations.length) {
       if (validDetails(response.data.variations[0])) {
