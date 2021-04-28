@@ -2,7 +2,8 @@
 // https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/quick-start
 require("dotenv").config();
 const axios = require("axios");
-const { extractDetails } = require("./utils/spell");
+
+const supabase = require("./db/init");
 
 // The code below sets the bearer token from your environment variables
 // To set environment variables on macOS or Linux, run the export command below from the terminal:
@@ -10,7 +11,8 @@ const { extractDetails } = require("./utils/spell");
 const token = process.env.BEARER_TOKEN;
 
 const rulesURL = "https://api.twitter.com/2/tweets/search/stream/rules";
-const streamURL = 'https://api.twitter.com/2/tweets/search/stream?user.fields=location&expansions=author_id,geo.place_id&tweet.fields=created_at,geo,lang&place.fields=country';
+const streamURL =
+  "https://api.twitter.com/2/tweets/search/stream?user.fields=location&expansions=author_id,geo.place_id&tweet.fields=created_at,geo,lang&place.fields=country";
 
 // this sets up two rules - the value is the search terms to match on, and the tag is an identifier that
 // will be applied to the Tweets return to show which rule they matched
@@ -20,7 +22,8 @@ const streamURL = 'https://api.twitter.com/2/tweets/search/stream?user.fields=lo
 // Edit rules as desired below
 const rules = [
   {
-    value: "(help OR need OR required OR available) (remdesivir OR tocilizumab) -is:retweet",
+    value:
+      "(help OR need OR required OR available) (remdesivir OR tocilizumab) -is:retweet",
     tag: "injection",
   },
   {
@@ -28,7 +31,8 @@ const rules = [
     tag: "oxygen",
   },
   {
-    value: "(help OR need OR required OR available OR donor) plasma -is:retweet",
+    value:
+      "(help OR need OR required OR available OR donor) plasma -is:retweet",
     tag: "plasma",
   },
   {
@@ -36,7 +40,8 @@ const rules = [
     tag: "bed",
   },
   {
-    value: "(help OR need OR required OR available) (ventilator OR icu OR ccu OR hdu) -is:retweet",
+    value:
+      "(help OR need OR required OR available) (ventilator OR icu OR ccu OR hdu) -is:retweet",
     tag: "icu/ventilator",
   },
   {
@@ -121,10 +126,31 @@ function streamConnect(retryAttempt) {
           try {
             const json = JSON.parse(data);
             const tweet = json.data.text;
-            console.log("tweet", tweet);
-            const userLocation = json.includes.users[0].location;
-            const extractedData = await extractDetails(tweet);
-            console.log(extractedData);
+
+            try {
+              const { data, error } = await supabase.from("Demands").insert([
+                {
+                  source: "twitter",
+                  source_id: json.data.id,
+                  content: tweet,
+                  location:
+                    (json.includes &&
+                      json.includes.places &&
+                      json.includes.places.length &&
+                      json.includes.places[0].full_name) ||
+                    (json.includes &&
+                      json.includes.users &&
+                      json.includes.users.length &&
+                      json.includes.users[0].location),
+                },
+              ]);
+
+              if (error) {
+                console.error(`Error white saving tweet`, error);
+              }
+            } catch (error) {
+              console.error(`Error white saving tweet`, error);
+            }
 
             // A successful connection resets retry count.
             retryAttempt = 0;

@@ -1,9 +1,5 @@
 const axios = require("axios");
 
-axios.defaults.headers.common[
-  "Authorization"
-] = `Bearer ${process.env.SPELL_KEY}`;
-
 const validDetails = (data) => {
   return !(((data.name === data.contact_number) === data.location) === "–");
 };
@@ -16,7 +12,13 @@ const extractDetails = async (content) => {
         template: "covid_tweet_parse",
         variations: 1,
         input: {
-          tweet_content: content,
+          tweet_content: content.replace(/\n/g, " "),
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.SPELL_KEY}`,
         },
       }
     );
@@ -27,7 +29,7 @@ const extractDetails = async (content) => {
       }
     }
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error.response);
   }
 };
 
