@@ -50,8 +50,15 @@ const processSupabase = async () => {
           status: "ai-filtered",
         })
         .eq("id", row.id);
+
+      console.info(`Failed ${row.id}`);
     }
   }
+
+  console.log(`No records to process... Sleeping for 10 seconds...`);
+  setTimeout(() => {
+    processSupabase();
+  }, 10000);
 };
 
 processSupabase();
