@@ -128,6 +128,7 @@ function streamConnect(retryAttempt) {
             const tweet = json.data.text;
 
             try {
+              console.log("tweet", tweet);
               const { data, error } = await supabase.from("Demands").insert([
                 {
                   source: "Twitter",
