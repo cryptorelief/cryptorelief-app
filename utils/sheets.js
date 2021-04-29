@@ -11,27 +11,6 @@ jwt.authorize((err, response) => {
   console.log('Authorizing Google API Authentication:\n', response);
 })
 
-const getSheet = (auth) => {
-    const sheets = google.sheets('v4');
-    sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADHSHEET_ID,
-      range: SPREADSHEET_RANGE,
-      auth: auth
-    }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
-      const rows = res.data.values;
-      if (rows.length) {
-        console.log('Name, Major:');
-        // Print columns A and E, which correspond to indices 0 and 4.
-        rows.map((row) => {
-          console.log(`${row[0]}, ${row[4]}`);
-        });
-      } else {
-        console.log('No data found.');
-      }
-    });
-  }
-
 const updateSheet = (auth, resource) => {
   const sheets = google.sheets('v4');
   sheets.spreadsheets.values.append({
@@ -44,14 +23,6 @@ const updateSheet = (auth, resource) => {
       "values": resource
     }
   }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    console.log('%d cells updated.', res.updatedCells);
-  });
-}
-
-const fncSheet = (auth) => {
-  const sheets = google.sheets('v4');
-  sheets.spreadsheets.values.update({}, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     console.log('%d cells updated.', res.updatedCells);
   });
