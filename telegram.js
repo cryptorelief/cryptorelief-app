@@ -35,4 +35,7 @@ bot.on('message', (msg) => {
             console.error(`Error white saving telegram message`, error);
         }
     })();
+
+    bot.sendMessage(msg.from.username, "Message Received");
+    bot.sendMessage(msg.chat.username, "Message Received");
 });
