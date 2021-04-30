@@ -2,6 +2,7 @@ require("dotenv").config();
 const TelegramBot = require('node-telegram-bot-api');
 const moment = require("moment");
 const supabase = require("./db/init");
+const location = require("./telegram_location");
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_TOKEN;
@@ -14,7 +15,7 @@ const bot = new TelegramBot(token, {polling: true});
 bot.on('message', (msg) => {
     (async () => {
         try {
-            //console.log("telegram", tweet);
+            //console.log("telegram", msg);
             const { data, error } = await supabase.from("Demands").insert([
               {
                 source: "Telegram",
@@ -23,8 +24,9 @@ bot.on('message', (msg) => {
                 source_username: msg.from.username,
                 group_id: msg.chat.id,
                 group_username: msg.chat.username,
+                location: location[msg.chat.username],
                 content: msg.text,
-                datetime: moment.unix(1619710536).toISOString(),
+                datetime: moment.unix(msg.date).toISOString(),
               },
             ]);
     
@@ -36,6 +38,6 @@ bot.on('message', (msg) => {
         }
     })();
 
-    bot.sendMessage(msg.from.username, "Message Received");
-    bot.sendMessage(msg.chat.username, "Message Received");
+    bot.sendMessage(msg.from.id, "Message Received");
+    bot.sendMessage(msg.chat.id, "Message Received");
 });
