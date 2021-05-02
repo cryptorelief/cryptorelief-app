@@ -38,6 +38,6 @@ bot.on('message', (msg) => {
         }
     })();
 
-    bot.sendMessage(msg.from.id, "Message Received");
-    bot.sendMessage(msg.chat.id, "Message Received");
+    //bot.sendMessage(msg.from.id, "Message Received");
+    //bot.sendMessage(msg.chat.id, "Message Received");
 });
